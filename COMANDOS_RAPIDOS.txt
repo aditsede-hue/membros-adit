@@ -1,0 +1,56 @@
+╔════════════════════════════════════════════════════════════════╗
+║     PORTAL DE CONSULTA DE MEMBROS ADIT - COMANDOS RÁPIDOS     ║
+╚════════════════════════════════════════════════════════════════╝
+
+🔧 CONFIGURAÇÃO INICIAL (Uma vez só)
+────────────────────────────────────────────────────────────────
+git config --global user.name "Seu Nome"
+git config --global user.email "seu.email@gmail.com"
+git remote add origin https://github.com/SEU_USERNAME/member-portal-adit.git
+git branch -M main
+git push -u origin main
+
+📝 EDITAR E ENVIAR MUDANÇAS (Toda vez que mudar algo)
+────────────────────────────────────────────────────────────────
+cd /home/ubuntu/member-portal
+git add .
+git commit -m "Descrição das mudanças"
+git push origin main
+
+✅ VER STATUS
+────────────────────────────────────────────────────────────────
+git status          # Ver arquivos modificados
+git log --oneline   # Ver histórico de commits
+git diff            # Ver mudanças detalhadas
+
+🌐 VERCEL DEPLOY
+────────────────────────────────────────────────────────────────
+1. Acesse https://vercel.com
+2. Clique em "Add New..." > "Project"
+3. Selecione "member-portal-adit"
+4. Clique em "Deploy"
+5. Seu site estará em: https://member-portal-adit.vercel.app
+
+🔄 FLUXO COMPLETO
+────────────────────────────────────────────────────────────────
+1. Edite os arquivos (index.html, src/members_data.json, etc)
+2. git add .
+3. git commit -m "Descrição"
+4. git push origin main
+5. Vercel atualiza automaticamente em segundos!
+
+❌ DESFAZER MUDANÇAS
+────────────────────────────────────────────────────────────────
+git checkout -- index.html      # Desfazer mudanças em um arquivo
+git reset --soft HEAD~1         # Desfazer último commit
+git checkout main               # Voltar ao estado anterior
+
+📚 MAIS INFORMAÇÕES
+────────────────────────────────────────────────────────────────
+Veja o arquivo: COMANDOS_PASSO_A_PASSO.md
+Veja o arquivo: DEPLOYMENT_GUIDE.md
+
+═══════════════════════════════════════════════════════════════════
+Criado em: 2026-03-11
+Versão: 1.0
+═══════════════════════════════════════════════════════════════════
