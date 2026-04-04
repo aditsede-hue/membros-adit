@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+/* ── Design Tokens ─────────────────────────────────────── */
+:root {
+  --gold:        #c9a84c;
+  --gold-light:  #e8d5a3;
+  --gold-dark:   #a87e2e;
+  --ink:         #0f1117;
+  --green:       #2d7a5f;
+  --blue:        #1e5fa8;
+  --red:         #c0392b;
+  --surface:     #ffffff;
+  --surface-2:   #f8f7f4;
+  --border:      #e8e3d8;
+  --ink-muted:   #6b7280;
+  --sidebar-w:   240px;
+  --topbar-h:    64px;
+  --radius:      8px;
+  --radius-lg:   12px;
+  --shadow-sm:   0 1px 3px rgba(15,17,23,0.08);
+  --shadow-md:   0 4px 16px rgba(15,17,23,0.12);
+  --shadow-lg:   0 8px 32px rgba(15,17,23,0.16);
+}
+
+/* ── Tailwind theme mapping ─────────────────────────────── */
+@theme inline {
+  --color-gold:        var(--gold);
+  --color-gold-light:  var(--gold-light);
+  --color-gold-dark:   var(--gold-dark);
+  --color-ink:         var(--ink);
+  --color-green:       var(--green);
+  --color-blue:        var(--blue);
+  --color-red:         var(--red);
+  --color-surface:     var(--surface);
+  --color-surface-2:   var(--surface-2);
+  --color-border:      var(--border);
+  --color-ink-muted:   var(--ink-muted);
+  --font-display:      "Playfair Display", Georgia, serif;
+  --font-body:         "DM Sans", system-ui, sans-serif;
+}
+
+/* ── Base ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  background: var(--surface-2);
+  color: var(--ink);
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--surface-2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+
+/* ── Focus ring ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ── Card ───────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Animations ─────────────────────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in  { animation: fade-in  0.2s ease both; }
+.animate-slide-in { animation: slide-in 0.2s ease both; }
+.animate-scale-in { animation: scale-in 0.18s ease both; }
