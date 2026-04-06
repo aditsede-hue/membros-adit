@@ -14,10 +14,10 @@ interface NavItem {
 const navItems: NavItem[] = [
   { href: "/dashboard",   icon: "⛪",  label: "Visão Geral" },
   { href: "/membros",     icon: "👥",  label: "Membros",      badge: 3 },
-  { href: "/celulas",     icon: "🏠",  label: "Células" },
   { href: "/visitantes",  icon: "🤝",  label: "Visitantes",   badge: 7 },
   { href: "/agenda",     icon: "📅",  label: "Agenda" },
-  { href: "/financeiro",  icon: "💰",  label: "Financeiro" },
+  { href: "/tarefas",    icon: "✅",  label: "Tarefas" },
+  { href: "/documentos", icon: "📄",  label: "Documentos" },
   { href: "/relatorios",  icon: "📊",  label: "Relatórios" },
   { href: "/configuracoes", icon: "⚙️", label: "Configurações" },
 ];

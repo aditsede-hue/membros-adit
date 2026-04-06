@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convite Especial – Culto em Ações de Graça</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --azul-escuro: #050d1a;
+      --azul-medio:  #0a1f3c;
+      --dourado:     #c9a84c;
+      --dourado-claro: #f0d080;
+      --branco:      #f5f5f5;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Georgia', serif;
+      background: var(--azul-escuro);
+      color: var(--branco);
+      overflow: hidden;
+    }
+
+    /* ─── Tela Intro ────────────────────────────────────────────── */
+    #intro {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      background: radial-gradient(ellipse at center, #0d1f3c 0%, #050d1a 100%);
+      transition: opacity 1s ease;
+      z-index: 10;
+    }
+
+    #intro.oculto {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #texto-intro {
+      font-size: clamp(18px, 5vw, 28px);
+      color: var(--branco);
+      text-align: center;
+      padding: 0 24px;
+      min-height: 80px;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    #texto-intro.visivel { opacity: 1; }
+
+    /* Linha dourada decorativa */
+    .linha-dourada {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--dourado), transparent);
+    }
+
+    /* Botão Ver convite */
+    #btn-convite {
+      display: none;
+      padding: 14px 36px;
+      font-size: 16px;
+      font-family: 'Georgia', serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--azul-escuro);
+      background: linear-gradient(135deg, var(--dourado-claro), var(--dourado));
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(201,168,76,0.4);
+      animation: pulso 2.5s ease-in-out infinite;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #btn-convite:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 36px rgba(201,168,76,0.7);
+    }
+
+    @keyframes pulso {
+      0%, 100% { box-shadow: 0 0 18px rgba(201,168,76,0.35); }
+      50%       { box-shadow: 0 0 36px rgba(201,168,76,0.75); }
+    }
+
+    /* ─── Partículas ────────────────────────────────────────────── */
+    #particulas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .particula {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--dourado);
+      opacity: 0;
+      animation: subir var(--dur) linear var(--delay) infinite;
+    }
+
+    @keyframes subir {
+      0%   { transform: translateY(110vh) scale(0.5); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.3; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* ─── Tela Convite ──────────────────────────────────────────── */
+    #convite {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-y: auto;
+      background: radial-gradient(ellipse at top, #0d1f3c 0%, var(--azul-escuro) 70%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1.2s ease;
+      z-index: 5;
+      padding-bottom: 48px;
+    }
+
+    #convite.visivel {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Cabeçalho sutil */
+    .convite-header {
+      width: 100%;
+      text-align: center;
+      padding: 32px 24px 0;
+    }
+
+    .convite-header .subtitulo-topo {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--dourado);
+      margin-bottom: 12px;
+    }
+
+    /* ── Imagem ── */
+    /* ⬇⬇⬇  SUBSTITUA "SUA-IMAGEM-AQUI.jpg" pelo caminho real da imagem ⬇⬇⬇ */
+    .imagem-wrapper {
+      position: relative;
+      width: 92%;
+      max-width: 440px;
+      margin: 28px auto 0;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(201,168,76,0.3), 0 0 120px rgba(10,31,60,0.8);
+    }
+
+    .imagem-wrapper img {
+      width: 100%;
+      display: block;
+      animation: zoom-suave 8s ease-in-out infinite alternate;
+    }
+
+    /* Overlay dourado sobre a imagem */
+    .imagem-wrapper::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(5,13,26,0.1) 0%,
+        rgba(5,13,26,0.05) 50%,
+        rgba(5,13,26,0.55) 100%
+      );
+    }
+
+    @keyframes zoom-suave {
+      from { transform: scale(1); }
+      to   { transform: scale(1.06); }
+    }
+
+    /* ── Texto do convite ── */
+    .convite-corpo {
+      width: 92%;
+      max-width: 440px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .ornamento {
+      font-size: 24px;
+      color: var(--dourado);
+      margin: 24px 0 10px;
+      letter-spacing: 0.2em;
+    }
+
+    .titulo-evento {
+      font-size: clamp(22px, 6vw, 32px);
+      font-weight: bold;
+      color: var(--dourado-claro);
+      letter-spacing: 0.05em;
+      line-height: 1.2;
+      text-shadow: 0 0 30px rgba(201,168,76,0.5);
+    }
+
+    .subtitulo-evento {
+      font-size: clamp(13px, 3.5vw, 17px);
+      color: #ccd6e8;
+      margin-top: 10px;
+      font-style: italic;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+    }
+
+    .divisor {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .divisor span {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--dourado), transparent);
+    }
+
+    .divisor .estrela { color: var(--dourado); font-size: 16px; }
+
+    .data-hora {
+      font-size: clamp(26px, 7vw, 38px);
+      font-weight: bold;
+      color: var(--branco);
+      letter-spacing: 0.06em;
+      line-height: 1.2;
+    }
+
+    .data-hora .hora {
+      display: block;
+      font-size: clamp(16px, 4.5vw, 22px);
+      color: var(--dourado);
+      margin-top: 6px;
+      font-weight: normal;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    /* ── Rodapé da igreja ── */
+    .rodape-igreja {
+      margin-top: 28px;
+      padding: 20px 24px;
+      background: rgba(10,31,60,0.6);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 4px;
+      width: 92%;
+      max-width: 440px;
+    }
+
+    .rodape-igreja .nome-igreja {
+      font-size: clamp(12px, 3.5vw, 15px);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dourado);
+      font-weight: bold;
+    }
+
+    .rodape-igreja .endereco {
+      font-size: clamp(11px, 3vw, 13px);
+      color: #a0b4c8;
+      margin-top: 8px;
+      font-style: italic;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Botão WhatsApp ── */
+    .btn-confirmar {
+      display: inline-block;
+      margin-top: 32px;
+      padding: 16px 40px;
+      font-family: 'Georgia', serif;
+      font-size: 15px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #fff;
+      background: linear-gradient(135deg, #1a7a3e, #25a35a);
+      text-decoration: none;
+      border-radius: 4px;
+      box-shadow: 0 0 24px rgba(37,163,90,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: pulso-verde 2.8s ease-in-out infinite;
+    }
+
+    .btn-confirmar:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(37,163,90,0.7);
+    }
+
+    @keyframes pulso-verde {
+      0%, 100% { box-shadow: 0 0 18px rgba(37,163,90,0.35); }
+      50%       { box-shadow: 0 0 38px rgba(37,163,90,0.65); }
+    }
+
+    .legenda-confirmar {
+      font-size: 11px;
+      color: #6a8099;
+      margin-top: 10px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     PARTÍCULAS (fundo dourado sutil — visíveis no convite)
+══════════════════════════════════════════════════════════════ -->
+<div id="particulas"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TELA 1 — INTRO COM SUSPENSE
+══════════════════════════════════════════════════════════════ -->
+<div id="intro">
+  <div class="linha-dourada"></div>
+  <p id="texto-intro"></p>
+  <div class="linha-dourada"></div>
+  <button id="btn-convite" onclick="revelarConvite()">✦ Ver convite ✦</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TELA 2 — CONVITE PRINCIPAL
+══════════════════════════════════════════════════════════════ -->
+<div id="convite">
+
+  <div class="convite-header">
+    <p class="subtitulo-topo">✦ &nbsp; Você está convidado &nbsp; ✦</p>
+  </div>
+
+  <div class="imagem-wrapper">
+    <img src="convite.jpg" alt="Convite – Culto em Ações de Graça" />
+  </div>
+
+
+</div><!-- /convite -->
+
+
+<script>
+  /* ─── Sequência de textos na intro ─────────────────────────── */
+  const frases = [
+    "Existe um dia que não pode ser ignorado...",
+    "Uma celebração especial está chegando...",
+    "E você faz parte disso"
+  ];
+
+  const elTexto  = document.getElementById("texto-intro");
+  const elBotao  = document.getElementById("btn-convite");
+  let indice = 0;
+
+  function trocarFrase() {
+    /* Apaga o texto atual */
+    elTexto.classList.remove("visivel");
+
+    setTimeout(() => {
+      elTexto.textContent = frases[indice];
+      elTexto.classList.add("visivel");
+      indice++;
+
+      if (indice >= frases.length) {
+        clearInterval(loop);
+        /* Exibe o botão após a última frase */
+        setTimeout(() => {
+          elBotao.style.display = "inline-block";
+        }, 1400);
+      }
+    }, 800); /* espera o fade-out antes de trocar o texto */
+  }
+
+  /* Mostra a primeira frase imediatamente, depois a cada 3 s */
+  trocarFrase();
+  const loop = setInterval(trocarFrase, 3000);
+
+  /* ─── Transição intro → convite ─────────────────────────────── */
+  function revelarConvite() {
+    document.getElementById("intro").classList.add("oculto");
+    setTimeout(() => {
+      document.getElementById("convite").classList.add("visivel");
+      gerarParticulas();
+    }, 900);
+  }
+
+  /* ─── Partículas douradas no fundo ──────────────────────────── */
+  function gerarParticulas() {
+    const container = document.getElementById("particulas");
+    const total = 28;
+
+    for (let i = 0; i < total; i++) {
+      const p = document.createElement("div");
+      p.className = "particula";
+
+      const tamanho = Math.random() * 4 + 2;       /* 2–6 px */
+      const left    = Math.random() * 100;          /* 0–100 % */
+      const dur     = Math.random() * 12 + 10;      /* 10–22 s */
+      const delay   = Math.random() * 10;           /* 0–10 s  */
+
+      p.style.cssText = `
+        width: ${tamanho}px;
+        height: ${tamanho}px;
+        left: ${left}%;
+        --dur: ${dur}s;
+        --delay: ${delay}s;
+      `;
+      container.appendChild(p);
+    }
+  }
+</script>
+</body>
+</html>
