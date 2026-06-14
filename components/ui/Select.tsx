@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { SelectHTMLAttributes, forwardRef } from "react";
 
@@ -32,7 +32,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               "w-full h-10 rounded-[var(--radius)] border bg-[var(--surface)] text-[var(--ink)]",
               "text-sm appearance-none px-3 pr-8 cursor-pointer",
               "transition-colors duration-150",
-              "focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)]",
+              "focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]",
               error
                 ? "border-[var(--red)] focus:ring-[var(--red)]"
                 : "border-[var(--border)]",

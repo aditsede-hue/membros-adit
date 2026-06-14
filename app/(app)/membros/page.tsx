@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -150,7 +150,7 @@ export default function MembrosPage() {
               placeholder="Buscar por nome..."
               value={buscaInput}
               onChange={(e) => setBuscaInput(e.target.value)}
-              className="w-full h-9 pl-9 pr-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)]"
+              className="w-full h-9 pl-9 pr-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
             />
           </div>
 
@@ -158,7 +158,7 @@ export default function MembrosPage() {
           <select
             value={filtroTipo}
             onChange={(e) => setFiltroTipo(e.target.value as FiltroPessoas["tipo"] | "")}
-            className="h-9 px-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)]"
+            className="h-9 px-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
           >
             <option value="">Todos os tipos</option>
             <option value="membro">Membro</option>
@@ -170,7 +170,7 @@ export default function MembrosPage() {
           <select
             value={filtroStatus}
             onChange={(e) => setFiltroStatus(e.target.value as FiltroPessoas["status"] | "")}
-            className="h-9 px-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)]"
+            className="h-9 px-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
           >
             <option value="">Todos os status</option>
             <option value="ativo">Ativo</option>
@@ -270,7 +270,7 @@ function PagBtn({
       className={[
         "h-8 px-3 rounded-[var(--radius)] text-sm font-medium transition-colors",
         active
-          ? "bg-[var(--gold)] text-white"
+          ? "bg-[var(--primary)] text-white"
           : "hover:bg-[var(--surface-2)] text-[var(--ink-muted)]",
         disabled ? "opacity-40 cursor-not-allowed pointer-events-none" : "",
       ].join(" ")}

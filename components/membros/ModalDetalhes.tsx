@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Modal from "@/components/ui/Modal";
 import Avatar from "@/components/ui/Avatar";
@@ -91,7 +91,7 @@ export default function ModalDetalhes({ open, onClose, pessoa, onEdit }: Props) 
           <Campo label="Endereço"      value={pessoa.endereco} />
         </div>
         {pessoa.obs_pastoral && (
-          <div className="col-span-2 p-3 rounded-[var(--radius)] bg-[#fdf3d7] border border-[var(--gold-light)]">
+          <div className="col-span-2 p-3 rounded-[var(--radius)] bg-[#fdf3d7] border border-[var(--primary-light)]">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-[#8b6314] mb-1">
               Obs. pastoral
             </p>

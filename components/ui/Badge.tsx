@@ -1,4 +1,4 @@
-type BadgeVariant =
+﻿type BadgeVariant =
   | "gold"
   | "green"
   | "blue"
@@ -23,7 +23,7 @@ const variantStyles: Record<BadgeVariant, string> = {
 };
 
 const dotColors: Record<BadgeVariant, string> = {
-  gold:  "bg-[var(--gold)]",
+  gold:  "bg-[var(--primary)]",
   green: "bg-[var(--green)]",
   blue:  "bg-[var(--blue)]",
   red:   "bg-[var(--red)]",

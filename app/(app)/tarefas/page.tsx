@@ -1,16 +1,15 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { getTarefas, criaTarefa, atualizaTarefa, deletaTarefa } from "@/lib/db/tarefas";
+import type { Tarefa, NovaTarefa } from "@/types";
+import { getTarefas, criaTarefa, atualizaTarefa, deletaTarefa } from "@/lib/tarefas";
 import Topbar from "@/components/layout/Topbar";
 import Avatar from "@/components/ui/Avatar";
-import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
-import type { Tarefa, NovaTarefa, UpdateTarefa } from "@/types";
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 
@@ -42,13 +41,6 @@ const STATUS_CFG: Record<
   atrasado:     { label: "Atrasado",     cor: "#c0392b", bg: "#fde8e6", colBg: "#fff5f5", borderCor: "#fca5a5" },
 };
 
-const BADGE_VARIANT: Record<Tarefa["status"], "blue" | "gold" | "green" | "red"> = {
-  pendente:     "blue",
-  em_andamento: "gold",
-  concluido:    "green",
-  atrasado:     "red",
-};
-
 const PRIORIDADE_CFG: Record<
   Tarefa["prioridade"],
   { label: string; stripe: string; badgeVariant: "red" | "gold" | "green" }
@@ -59,6 +51,7 @@ const PRIORIDADE_CFG: Record<
 };
 
 const COLUNAS: Tarefa["status"][] = ["pendente", "em_andamento", "concluido", "atrasado"];
+
 
 // ── Seed de dados iniciais ────────────────────────────────────────────────────
 
@@ -224,6 +217,10 @@ function prazoLabel(prazo?: string | null, status?: Tarefa["status"]): { text: s
   return              { text: formatDataPT(prazo),               variant: "green" };
 }
 
+
+
+
+
 // ── Tipos de formulário ───────────────────────────────────────────────────────
 
 type FormData = {
@@ -268,6 +265,7 @@ export default function TarefasPage() {
   const [view,        setView]        = useState<View>("kanban");
   const [filtros,     setFiltros]     = useState<Filtros>(FILTROS_VAZIOS);
 
+  
   // Modal
   const [modalAberto,       setModalAberto]       = useState(false);
   const [tarefaEditando,    setTarefaEditando]     = useState<Tarefa | null>(null);
@@ -331,6 +329,8 @@ export default function TarefasPage() {
   }
 
   useEffect(() => { carregarTarefas(); }, [carregarTarefas]);
+
+
 
   // ── Filtros ───────────────────────────────────────────────────────────────
 
@@ -450,6 +450,18 @@ export default function TarefasPage() {
     }
   }
 
+  // Move a tarefa para outra coluna (drag-and-drop). Atualização otimista + reversão se falhar.
+  async function moverTarefa(t: Tarefa, novoStatus: Tarefa["status"]) {
+    if (t.status === novoStatus) return;
+    setTarefas((prev) => prev.map((x) => (x.id === t.id ? { ...x, status: novoStatus } : x)));
+    try {
+      await atualizaTarefa(supabase, t.id, { status: novoStatus });
+    } catch (e) {
+      console.error("Erro ao mover tarefa:", e);
+      setTarefas((prev) => prev.map((x) => (x.id === t.id ? { ...x, status: t.status } : x)));
+    }
+  }
+
   // ── Render ────────────────────────────────────────────────────────────────
 
   const totalFiltrado = tarefasFiltradas.length;
@@ -475,17 +487,17 @@ export default function TarefasPage() {
       >
         {/* ── Stats ──────────────────────────────────────────────────────── */}
         <div className="px-6 pt-6 pb-4 grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <StatCard label="Total" value={stats.total}     icon="📋" color="var(--ink)"  />
-          <StatCard label="Atrasadas" value={stats.atrasadas} icon="⚠️" color="var(--red)"  />
-          <StatCard label="Vencem hoje" value={stats.vencem}  icon="⏰" color="#d97706"     />
-          <StatCard label="Em andamento" value={stats.andamento} icon="⚡" color="var(--blue)" />
+          <StatCard label="Total" value={stats.total} icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M9 12h6M9 16h4"/></svg>} color="var(--ink)" />
+          <StatCard label="Atrasadas" value={stats.atrasadas} icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>} color="var(--red)" />
+          <StatCard label="Vencem hoje" value={stats.vencem} icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>} color="#d97706" />
+          <StatCard label="Em andamento" value={stats.andamento} icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="13 2 13 9 20 9"/><path d="M21 3L13 11"/><path d="M3 21l7-7M3 3l18 18"/></svg>} color="var(--blue)" />
         </div>
 
         {/* ── Abas ───────────────────────────────────────────────────────── */}
         <div className="px-6 flex items-center gap-1 border-b border-[var(--border)]">
           {(["kanban", "minhas", "notificacoes"] as View[]).map((v) => {
             const labels: Record<View, string> = {
-              kanban:       "Kanban",
+              kanban:       "Geral",
               minhas:       "Minhas Tarefas",
               notificacoes: "Notificações",
             };
@@ -496,7 +508,7 @@ export default function TarefasPage() {
                 className={[
                   "px-4 py-2.5 text-sm font-medium transition-all border-b-2 -mb-px",
                   view === v
-                    ? "border-[var(--gold)] text-[var(--gold-dark)]"
+                    ? "border-[var(--primary)] text-[var(--primary-dark)]"
                     : "border-transparent text-[var(--ink-muted)] hover:text-[var(--ink)]",
                 ].join(" ")}
               >
@@ -517,7 +529,7 @@ export default function TarefasPage() {
             <select
               value={filtros.responsavel}
               onChange={(e) => setFiltros((f) => ({ ...f, responsavel: e.target.value }))}
-              className="h-8 rounded-[6px] border border-[var(--border)] bg-[var(--surface)] text-xs px-2 pr-6 appearance-none text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--gold)]"
+              className="h-8 rounded-[6px] border border-[var(--border)] bg-[var(--surface)] text-xs px-2 pr-6 appearance-none text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
             >
               <option value="">Todos responsáveis</option>
               {RESPONSAVEIS.map((r) => <option key={r} value={r}>{r}</option>)}
@@ -526,7 +538,7 @@ export default function TarefasPage() {
             <select
               value={filtros.status}
               onChange={(e) => setFiltros((f) => ({ ...f, status: e.target.value }))}
-              className="h-8 rounded-[6px] border border-[var(--border)] bg-[var(--surface)] text-xs px-2 pr-6 appearance-none text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--gold)]"
+              className="h-8 rounded-[6px] border border-[var(--border)] bg-[var(--surface)] text-xs px-2 pr-6 appearance-none text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
             >
               <option value="">Todos os status</option>
               {COLUNAS.map((s) => <option key={s} value={s}>{STATUS_CFG[s].label}</option>)}
@@ -535,7 +547,7 @@ export default function TarefasPage() {
             <select
               value={filtros.prazo}
               onChange={(e) => setFiltros((f) => ({ ...f, prazo: e.target.value }))}
-              className="h-8 rounded-[6px] border border-[var(--border)] bg-[var(--surface)] text-xs px-2 pr-6 appearance-none text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--gold)]"
+              className="h-8 rounded-[6px] border border-[var(--border)] bg-[var(--surface)] text-xs px-2 pr-6 appearance-none text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
             >
               <option value="">Qualquer prazo</option>
               <option value="hoje">Vence hoje</option>
@@ -546,7 +558,7 @@ export default function TarefasPage() {
             <select
               value={filtros.prioridade}
               onChange={(e) => setFiltros((f) => ({ ...f, prioridade: e.target.value }))}
-              className="h-8 rounded-[6px] border border-[var(--border)] bg-[var(--surface)] text-xs px-2 pr-6 appearance-none text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--gold)]"
+              className="h-8 rounded-[6px] border border-[var(--border)] bg-[var(--surface)] text-xs px-2 pr-6 appearance-none text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
             >
               <option value="">Qualquer prioridade</option>
               <option value="alta">Alta</option>
@@ -573,10 +585,10 @@ export default function TarefasPage() {
 
         {/* ── Conteúdo ────────────────────────────────────────────────────── */}
         <div className="flex-1 overflow-auto">
-          {loading || seeding ? (
+         {loading || seeding ? (
             <LoadingState seeding={seeding} />
           ) : view === "kanban" ? (
-            <KanbanView tarefas={tarefasFiltradas} onEditar={abrirEditar} />
+            <KanbanView tarefas={tarefasFiltradas} onEditar={abrirEditar} onMover={moverTarefa} />
           ) : view === "minhas" ? (
             <MinhasTarefasView
               tarefas={tarefasFiltradas.filter(
@@ -591,6 +603,8 @@ export default function TarefasPage() {
         </div>
       </main>
 
+      
+      
       {/* ── Modal ──────────────────────────────────────────────────────────── */}
       <ModalTarefa
         open={modalAberto}
@@ -612,12 +626,12 @@ export default function TarefasPage() {
 // ── StatCard ──────────────────────────────────────────────────────────────────
 
 function StatCard({ label, value, icon, color }: {
-  label: string; value: number; icon: string; color: string;
+  label: string; value: number; icon: React.ReactNode; color: string;
 }) {
   return (
     <div className="card p-4 flex items-center gap-3 animate-fade-in">
       <span
-        className="w-9 h-9 rounded-[var(--radius)] flex items-center justify-center text-base shrink-0"
+        className="w-9 h-9 rounded-[var(--radius)] flex items-center justify-center shrink-0"
         style={{ background: color + "18", color }}
       >
         {icon}
@@ -632,17 +646,36 @@ function StatCard({ label, value, icon, color }: {
 
 // ── KanbanView ────────────────────────────────────────────────────────────────
 
-function KanbanView({ tarefas, onEditar }: {
+function KanbanView({ tarefas, onEditar, onMover }: {
   tarefas: Tarefa[];
   onEditar: (t: Tarefa) => void;
+  onMover: (t: Tarefa, novoStatus: Tarefa["status"]) => void;
 }) {
+  const [colArrastada, setColArrastada] = useState<Tarefa["status"] | null>(null);
+
+  function handleDrop(e: React.DragEvent, col: Tarefa["status"]) {
+    e.preventDefault();
+    setColArrastada(null);
+    const id = e.dataTransfer.getData("text/plain");
+    const t = tarefas.find((x) => x.id === id);
+    if (t) onMover(t, col);
+  }
+
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-start">
       {COLUNAS.map((col) => {
         const items = tarefas.filter((t) => t.status === col);
         const cfg   = STATUS_CFG[col];
+        const ativa = colArrastada === col;
         return (
-          <div key={col} className="flex flex-col gap-3">
+          <div
+            key={col}
+            className="flex flex-col gap-3 rounded-[var(--radius-lg)] transition-all"
+            style={ativa ? { background: cfg.colBg, outline: `2px dashed ${cfg.cor}`, outlineOffset: 4 } : undefined}
+            onDragOver={(e) => { e.preventDefault(); setColArrastada(col); }}
+            onDragLeave={(e) => { if (e.currentTarget === e.target) setColArrastada(null); }}
+            onDrop={(e) => handleDrop(e, col)}
+          >
             {/* Header da coluna */}
             <div
               className="flex items-center justify-between px-3 py-2 rounded-[var(--radius)] border"
@@ -665,7 +698,7 @@ function KanbanView({ tarefas, onEditar }: {
                 className="flex flex-col items-center justify-center py-8 rounded-[var(--radius-lg)] border-2 border-dashed text-center gap-1"
                 style={{ borderColor: cfg.borderCor, background: cfg.colBg + "88" }}
               >
-                <span className="text-xl opacity-40">📭</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.3 }}><path d="M22 12h-6l-2 3H10l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
                 <p className="text-xs text-[var(--ink-muted)]">Nenhuma tarefa</p>
               </div>
             ) : (
@@ -692,9 +725,14 @@ function TarefaCard({ tarefa: t, onEditar }: {
 
   return (
     <div
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.setData("text/plain", t.id);
+        e.dataTransfer.effectAllowed = "move";
+      }}
       className={[
         "card group flex flex-col overflow-hidden transition-all duration-200",
-        "hover:border-[var(--gold)] hover:shadow-md cursor-pointer",
+        "hover:border-[var(--primary)] hover:shadow-md cursor-grab active:cursor-grabbing",
         concluido ? "opacity-60" : "",
       ].join(" ")}
       onClick={() => onEditar(t)}
@@ -741,7 +779,7 @@ function TarefaCard({ tarefa: t, onEditar }: {
                                           "bg-[var(--surface-2)] text-[var(--ink-muted)]",
             ].join(" ")}
           >
-            📅 {prazo.text}
+            {prazo.text}
           </span>
         </div>
 
@@ -755,7 +793,7 @@ function TarefaCard({ tarefa: t, onEditar }: {
               onClick={(e) => { e.stopPropagation(); onEditar(t); }}
               className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--ink-muted)] hover:text-[var(--ink)] text-xs px-1"
             >
-              ✏️
+              editar
             </button>
           </div>
         )}
@@ -774,7 +812,7 @@ function MinhasTarefasView({ tarefas, onToggle, onEditar }: {
   if (tarefas.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
-        <span className="text-4xl">🎉</span>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         <p className="text-base font-semibold text-[var(--ink)]">Tudo em dia!</p>
         <p className="text-sm text-[var(--ink-muted)]">Nenhuma tarefa pendente para você.</p>
       </div>
@@ -806,7 +844,7 @@ function MinhasTarefasView({ tarefas, onToggle, onEditar }: {
                 return (
                   <div
                     key={t.id}
-                    className="card p-3 flex items-start gap-3 hover:border-[var(--gold)] transition-all"
+                    className="card p-3 flex items-start gap-3 hover:border-[var(--primary)] transition-all"
                   >
                     {/* Checkbox */}
                     <button
@@ -822,7 +860,7 @@ function MinhasTarefasView({ tarefas, onToggle, onEditar }: {
                           onClick={() => onEditar(t)}
                           className="text-[var(--ink-muted)] hover:text-[var(--ink)] text-xs shrink-0"
                         >
-                          ✏️
+                          editar
                         </button>
                       </div>
                       {t.descricao && (
@@ -890,7 +928,9 @@ function NotificacoesView() {
                   i < items.length - 1 || gi < grupos.length - 1 ? "border-b border-[var(--border)]" : "",
                 ].join(" ")}
               >
-                <span className="text-xl mt-0.5 shrink-0">{n.icone}</span>
+                <span className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: "var(--surface-2)" }}>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+</span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${tipoCor[n.tipo]}`}>
@@ -963,7 +1003,7 @@ function ModalTarefa({
             onChange={(e) => set("descricao", e.target.value)}
             rows={3}
             placeholder="Detalhes sobre a tarefa…"
-            className="w-full rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] transition-colors"
+            className="w-full rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors"
           />
         </div>
 
@@ -990,9 +1030,9 @@ function ModalTarefa({
             value={form.prioridade}
             onChange={(e) => set("prioridade", e.target.value as Tarefa["prioridade"])}
             options={[
-              { value: "alta",  label: "🔴 Alta"  },
-              { value: "media", label: "🟡 Média" },
-              { value: "baixa", label: "🟢 Baixa" },
+              { value: "alta",  label: "Alta"  },
+              { value: "media", label: "Média" },
+              { value: "baixa", label: "Baixa" },
             ]}
           />
           <Select
@@ -1044,7 +1084,7 @@ function ModalTarefa({
 function LoadingState({ seeding }: { seeding: boolean }) {
   return (
     <div className="flex flex-col items-center justify-center py-20 gap-3">
-      <div className="w-8 h-8 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
       <p className="text-sm text-[var(--ink-muted)]">
         {seeding ? "Criando tarefas de exemplo…" : "Carregando tarefas…"}
       </p>

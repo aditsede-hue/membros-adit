@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -196,7 +196,7 @@ export default function AgendaPage() {
               </Button>
             )}
             <Button variant="ghost" size="sm" onClick={exportarPDF}>
-              📄 PDF
+              PDF
             </Button>
             <Button variant="primary" size="sm" onClick={() => abrirNovo()}>
               + Novo evento
@@ -210,19 +210,19 @@ export default function AgendaPage() {
         {/* Cards de resumo */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <ResumoCard
-            icon="📅"
+            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>}
             label={`Eventos em ${MESES_PT[mes]}`}
             value={loading ? "…" : String(eventos.length)}
-            color="var(--gold)"
+            color="var(--primary)"
           />
           <ResumoCard
-            icon="🏷️"
+            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>}
             label="Tipos diferentes"
             value={loading ? "…" : String(tiposNoMes)}
             color="var(--blue)"
           />
           <ResumoCard
-            icon="⏭️"
+            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>}
             label="Próximo evento"
             value={
               loading
@@ -279,7 +279,7 @@ export default function AgendaPage() {
                     : "bg-[var(--surface)] text-[var(--ink-muted)] hover:bg-[var(--surface-2)]",
                 ].join(" ")}
               >
-                {v === "mes" ? "📅 Mês" : "📋 Lista"}
+                {v === "mes" ? "Mês" : "Lista"}
               </button>
             ))}
           </div>
@@ -330,12 +330,12 @@ export default function AgendaPage() {
 /* ── Sub-components ───────────────────────────────────────────────────────── */
 function ResumoCard({
   icon, label, value, color, small,
-}: { icon: string; label: string; value: string; color: string; small?: boolean }) {
+}: { icon: React.ReactNode; label: string; value: string; color: string; small?: boolean }) {
   return (
     <div className="card px-4 py-3 flex items-center gap-3">
       <span
         style={{ background: color + "18", color }}
-        className="w-10 h-10 rounded-[var(--radius)] flex items-center justify-center text-lg shrink-0"
+        className="w-10 h-10 rounded-[var(--radius)] flex items-center justify-center shrink-0"
       >
         {icon}
       </span>

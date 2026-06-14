@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo } from "react";
 import { getTipo } from "@/lib/agenda/tipos";
@@ -117,7 +117,7 @@ export default function CalendarioMes({ ano, mes, eventos, onDiaClick, onEventoC
                 className={[
                   "text-sm font-semibold w-7 h-7 flex items-center justify-center rounded-full mx-auto shrink-0",
                   isHoje
-                    ? "bg-[var(--gold)] text-white"
+                    ? "bg-[var(--primary)] text-white"
                     : isFimSem
                     ? "text-[var(--red)]"
                     : "text-[var(--ink)]",

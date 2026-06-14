@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -137,7 +137,7 @@ export default function ModalEvento({ open, onClose, evento, dataPadrao, onSaved
             <select
               value={form.tipo}
               onChange={(e) => set("tipo", e.target.value)}
-              className="flex-1 h-10 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm px-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)]"
+              className="flex-1 h-10 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm px-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
             >
               {TIPO_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -187,7 +187,7 @@ export default function ModalEvento({ open, onClose, evento, dataPadrao, onSaved
             onChange={(e) => set("obs", e.target.value)}
             rows={2}
             placeholder="Informações adicionais..."
-            className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm px-3 py-2 text-[var(--ink)] placeholder:text-[var(--ink-muted)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--gold)]"
+            className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm px-3 py-2 text-[var(--ink)] placeholder:text-[var(--ink-muted)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
           />
         </div>
 

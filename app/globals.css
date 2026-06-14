@@ -1,11 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
 /* ── Design Tokens ─────────────────────────────────────── */
 :root {
-  --gold:        #c9a84c;
-  --gold-light:  #e8d5a3;
-  --gold-dark:   #a87e2e;
+  --primary:        #3b82f6;
+  --primary-light:  #bfdbfe;
+  --primary-dark:   #1d4ed8;
   --ink:         #0f1117;
   --green:       #2d7a5f;
   --blue:        #1e5fa8;
@@ -25,9 +25,9 @@
 
 /* ── Tailwind theme mapping ─────────────────────────────── */
 @theme inline {
-  --color-gold:        var(--gold);
-  --color-gold-light:  var(--gold-light);
-  --color-gold-dark:   var(--gold-dark);
+  --color-primary:        var(--primary);
+  --color-primary-light:  var(--primary-light);
+  --color-primary-dark:   var(--primary-dark);
   --color-ink:         var(--ink);
   --color-green:       var(--green);
   --color-blue:        var(--blue);
@@ -36,8 +36,7 @@
   --color-surface-2:   var(--surface-2);
   --color-border:      var(--border);
   --color-ink-muted:   var(--ink-muted);
-  --font-display:      "Playfair Display", Georgia, serif;
-  --font-body:         "DM Sans", system-ui, sans-serif;
+  --font-body:         "Inter", system-ui, sans-serif;
 }
 
 /* ── Base ───────────────────────────────────────────────── */
@@ -48,17 +47,31 @@ html, body { height: 100%; }
 body {
   background: var(--surface-2);
   color: var(--ink);
-  font-family: "DM Sans", system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Playfair Display", Georgia, serif;
-  font-weight: 600;
+h1, h2, h3 {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 700;
   line-height: 1.25;
   color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+h4, h5, h6 {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+label {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 500;
 }
 
 /* ── Scrollbar ──────────────────────────────────────────── */
@@ -69,7 +82,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Focus ring ─────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 

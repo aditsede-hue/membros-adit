@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -66,7 +66,7 @@ const ANIVERSARIANTES_MOCK: Aniversariante[] = [
 ];
 
 const RESPONSAVEIS_CORES: Record<string, string> = {
-  "Fagner Silva":   "var(--gold)",
+  "Fagner Silva":   "var(--primary)",
   "Lisandra Souza": "var(--blue)",
   "Adriana Lima":   "var(--green)",
   "Marco Aurélio":  "var(--red)",
@@ -79,7 +79,7 @@ const RELATORIOS_GRID = [
   { id: "crescimento"    as RelatorioId, icon: "📈", titulo: "Crescimento Mensal",     desc: "Evolução de membros e visitantes ao longo do tempo",   cor: "var(--green)",  bg: "#d4ede5" },
   { id: "frequencia"     as RelatorioId, icon: "⛪", titulo: "Frequência nos Cultos",  desc: "Taxa de presença nos cultos dominicais por semana",     cor: "var(--blue)",   bg: "#dbeafe" },
   { id: "aniversariantes"as RelatorioId, icon: "🎂", titulo: "Aniversariantes do Mês", desc: "Lista de aniversariantes para mensagens e celebrações", cor: "#d97706",       bg: "#fef3c7" },
-  { id: "ministerios"    as RelatorioId, icon: "⚙️", titulo: "Membros por Ministério", desc: "Distribuição de integrantes em cada ministério",        cor: "var(--gold)",   bg: "#fdf3d7" },
+  { id: "ministerios"    as RelatorioId, icon: "⚙️", titulo: "Membros por Ministério", desc: "Distribuição de integrantes em cada ministério",        cor: "var(--primary)",   bg: "#fdf3d7" },
   { id: "produtividade"  as RelatorioId, icon: "🏆", titulo: "Produtividade da Equipe",desc: "Tarefas criadas, concluídas e taxa de conclusão",       cor: "var(--red)",    bg: "#fde8e6" },
 ];
 
@@ -191,7 +191,7 @@ function GraficoBarra({ dados, meta }: {
       <div className="flex items-end gap-1.5" style={{ height: maxH + 24 }}>
         {dados.map((d) => {
           const abaixoMeta = meta && d.pct < meta;
-          const cor = abaixoMeta ? "var(--red)" : "var(--gold)";
+          const cor = abaixoMeta ? "var(--red)" : "var(--primary)";
           return (
             <div key={d.label} className="flex-1 flex flex-col items-center gap-1 group"
               title={`${d.label}: ${d.pct}% (${d.presentes} presentes)`}>
@@ -475,8 +475,8 @@ export default function RelatoriosPage() {
                 className={[
                   "px-3 h-7 rounded-full text-xs font-medium transition-all border",
                   periodo === p
-                    ? "bg-[var(--gold)] text-white border-[var(--gold)]"
-                    : "bg-[var(--surface)] text-[var(--ink-muted)] border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold-dark)]",
+                    ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                    : "bg-[var(--surface)] text-[var(--ink-muted)] border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary-dark)]",
                 ].join(" ")}
               >
                 {labels[p]}
@@ -497,7 +497,7 @@ export default function RelatoriosPage() {
               <button
                 key={r.id}
                 onClick={() => setRelatorio(r.id)}
-                className="card p-5 text-left hover:border-[var(--gold)] hover:shadow-md transition-all animate-fade-in group"
+                className="card p-5 text-left hover:border-[var(--primary)] hover:shadow-md transition-all animate-fade-in group"
                 style={{ animationDelay: `${i * 60}ms` }}
               >
                 <div className="flex items-start gap-4">
@@ -508,13 +508,13 @@ export default function RelatoriosPage() {
                     {r.icon}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[var(--ink)] group-hover:text-[var(--gold-dark)] transition-colors"
+                    <p className="text-sm font-semibold text-[var(--ink)] group-hover:text-[var(--primary-dark)] transition-colors"
                       style={{ fontFamily: "var(--font-display)" }}>
                       {r.titulo}
                     </p>
                     <p className="text-xs text-[var(--ink-muted)] mt-1 leading-relaxed">{r.desc}</p>
                   </div>
-                  <span className="text-[var(--ink-muted)] group-hover:text-[var(--gold)] transition-colors text-lg shrink-0">→</span>
+                  <span className="text-[var(--ink-muted)] group-hover:text-[var(--primary)] transition-colors text-lg shrink-0">→</span>
                 </div>
               </button>
             ))}
@@ -563,7 +563,7 @@ function RelatorioCrescimento({ dados }: {
           <p className="text-xs text-[var(--ink-muted)]">Visitantes ({dados[dados.length-1]?.mes})</p>
         </div>
         <div className="card p-4 text-center">
-          <p className="text-2xl font-bold text-[var(--gold)]">+{deltaMembros}</p>
+          <p className="text-2xl font-bold text-[var(--primary)]">+{deltaMembros}</p>
           <p className="text-xs text-[var(--ink-muted)]">Crescimento no período</p>
         </div>
       </div>
@@ -575,14 +575,14 @@ function RelatorioCrescimento({ dados }: {
             Evolução — Membros e Visitantes
           </h3>
           <div className="flex items-center gap-3 text-xs">
-            <span className="flex items-center gap-1"><span className="w-3 h-1 rounded bg-[var(--gold)] inline-block"/>&nbsp;Membros</span>
+            <span className="flex items-center gap-1"><span className="w-3 h-1 rounded bg-[var(--primary)] inline-block"/>&nbsp;Membros</span>
             <span className="flex items-center gap-1"><span className="w-3 h-1 rounded bg-[var(--blue)] inline-block"/>&nbsp;Visitantes</span>
           </div>
         </div>
         <GraficoLinha
           labels={dados.map((d) => d.mes)}
           series={[
-            { label: "Membros",    color: "var(--gold)", data: dados.map((d) => d.membros)    },
+            { label: "Membros",    color: "var(--primary)", data: dados.map((d) => d.membros)    },
             { label: "Visitantes", color: "var(--blue)", data: dados.map((d) => d.visitantes) },
           ]}
         />
@@ -675,7 +675,7 @@ function RelatorioFrequencia({ dados }: {
           </h3>
           <div className="flex items-center gap-3 text-xs">
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-1 rounded bg-[var(--gold)] inline-block"/>Acima da meta
+              <span className="w-3 h-1 rounded bg-[var(--primary)] inline-block"/>Acima da meta
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-3 h-1 rounded bg-[var(--red)] inline-block"/>Abaixo da meta
@@ -796,8 +796,8 @@ function RelatorioAniversariantes({ aniversariantes }: {
                   ehHoje ? "bg-[#fdf3d7]" : "hover:bg-[var(--surface-2)]",
                 ].join(" ")}>
                   <td className="px-4 py-3 font-medium">
-                    {ehHoje && <span className="text-[var(--gold-dark)] mr-1">🎂</span>}
-                    <span className={ehHoje ? "text-[var(--gold-dark)] font-semibold" : "text-[var(--ink)]"}>
+                    {ehHoje && <span className="text-[var(--primary-dark)] mr-1">🎂</span>}
+                    <span className={ehHoje ? "text-[var(--primary-dark)] font-semibold" : "text-[var(--ink)]"}>
                       {String(a.dia).padStart(2,"0")}/{mesStr}
                     </span>
                   </td>
@@ -947,7 +947,7 @@ function RelatorioProdutividade({ produtividade, loading }: {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16 gap-3">
-        <div className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
         <span className="text-sm text-[var(--ink-muted)]">Calculando produtividade…</span>
       </div>
     );
@@ -960,7 +960,7 @@ function RelatorioProdutividade({ produtividade, loading }: {
         {produtividade.slice(0, 3).map((p, i) => (
           <div key={p.nome} className={[
             "card p-4 text-center",
-            i === 0 ? "border-[var(--gold)] shadow-md" : "",
+            i === 0 ? "border-[var(--primary)] shadow-md" : "",
           ].join(" ")}>
             <p className="text-2xl mb-1">{MEDALHAS[i]}</p>
             <Avatar name={p.nome} size="sm" className="mx-auto mb-2" />
@@ -1074,7 +1074,7 @@ function MiniPreviewCrescimento({ dados }: { dados: typeof CRESCIMENTO_ANUAL }) 
       <GraficoLinha
         labels={dados.map((d) => d.mes)}
         series={[
-          { label: "Membros",    color: "var(--gold)", data: dados.map((d) => d.membros)    },
+          { label: "Membros",    color: "var(--primary)", data: dados.map((d) => d.membros)    },
           { label: "Visitantes", color: "var(--blue)", data: dados.map((d) => d.visitantes) },
         ]}
       />

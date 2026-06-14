@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -29,7 +29,7 @@ const DOCS_CONFIG: DocConfig[] = [
     id: "batismo",
     titulo: "Certificado de Batismo",
     subtitulo: "Ordenação pelo batismo nas águas",
-    icon: "💧",
+    icon: "Bt",
     cor: "#1e5fa8",
     bg: "#dbeafe",
     campos: [
@@ -42,7 +42,7 @@ const DOCS_CONFIG: DocConfig[] = [
     id: "consagracao",
     titulo: "Certificado de Consagração",
     subtitulo: "Consagração ao ministério",
-    icon: "✝️",
+    icon: "Cs",
     cor: "#7c3d8a",
     bg: "#fae8ff",
     campos: [
@@ -56,7 +56,7 @@ const DOCS_CONFIG: DocConfig[] = [
     id: "apresentacao",
     titulo: "Certificado de Apresentação",
     subtitulo: "Apresentação de crianças ao Senhor",
-    icon: "👶",
+    icon: "Ap",
     cor: "#d97706",
     bg: "#fef3c7",
     campos: [
@@ -72,7 +72,7 @@ const DOCS_CONFIG: DocConfig[] = [
     id: "curso_obreiros",
     titulo: "Certificado de Curso de Obreiros",
     subtitulo: "Conclusão de formação ministerial",
-    icon: "📖",
+    icon: "Cf",
     cor: "#2d7a5f",
     bg: "#d4ede5",
     campos: [
@@ -86,7 +86,7 @@ const DOCS_CONFIG: DocConfig[] = [
     id: "mudanca",
     titulo: "Carta de Mudança",
     subtitulo: "Transferência de membresia",
-    icon: "📦",
+    icon: "Mu",
     cor: "#c9a84c",
     bg: "#fdf3d7",
     campos: [
@@ -99,7 +99,7 @@ const DOCS_CONFIG: DocConfig[] = [
     id: "recomendacao",
     titulo: "Carta de Recomendação",
     subtitulo: "Recomendação de membro",
-    icon: "🤝",
+    icon: "Re",
     cor: "#c0392b",
     bg: "#fde8e6",
     campos: [
@@ -112,7 +112,7 @@ const DOCS_CONFIG: DocConfig[] = [
     id: "oficio",
     titulo: "Ofício",
     subtitulo: "Documento oficial da Igreja",
-    icon: "📄",
+    icon: "Of",
     cor: "#374151",
     bg: "#f3f4f6",
     campos: [
@@ -128,7 +128,7 @@ const DOCS_CONFIG: DocConfig[] = [
     id: "declaracao",
     titulo: "Declaração",
     subtitulo: "Declaração oficial da Igreja",
-    icon: "📋",
+    icon: "De",
     cor: "#0f1117",
     bg: "#f8f7f4",
     campos: [
@@ -273,13 +273,13 @@ export default function DocumentosPage() {
               className={[
                 "px-4 py-2.5 text-sm font-medium transition-all border-b-2 -mb-px",
                 view === v
-                  ? "border-[var(--gold)] text-[var(--gold-dark)]"
+                  ? "border-[var(--primary)] text-[var(--primary-dark)]"
                   : "border-transparent text-[var(--ink-muted)] hover:text-[var(--ink)]",
               ].join(" ")}
             >
               {v === "gerar" ? "Gerar Novo" : "Histórico"}
               {v === "historico" && badgeCount && (
-                <span className="ml-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-[var(--gold)] text-white text-[10px] font-bold">
+                <span className="ml-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-[var(--primary)] text-white text-[10px] font-bold">
                   {badgeCount}
                 </span>
               )}
@@ -336,18 +336,18 @@ function GerarView({
             key={cfg.id}
             onClick={() => setDocAtivo(cfg)}
             className={[
-              "card p-4 text-left group hover:border-[var(--gold)] hover:shadow-md transition-all animate-fade-in",
-              docAtivo?.id === cfg.id ? "border-[var(--gold)] shadow-md" : "",
+              "card p-4 text-left group hover:border-[var(--primary)] hover:shadow-md transition-all animate-fade-in",
+              docAtivo?.id === cfg.id ? "border-[var(--primary)] shadow-md" : "",
             ].join(" ")}
             style={{ animationDelay: `${i * 50}ms` }}
           >
             <span
-              className="w-11 h-11 rounded-[var(--radius-lg)] flex items-center justify-center text-2xl mb-3 transition-transform group-hover:scale-110"
+              className="w-11 h-11 rounded-[var(--radius-lg)] flex items-center justify-center text-xs font-bold mb-3 transition-transform group-hover:scale-110"
               style={{ background: cfg.bg, color: cfg.cor }}
             >
               {cfg.icon}
             </span>
-            <p className="text-sm font-semibold text-[var(--ink)] group-hover:text-[var(--gold-dark)] leading-snug transition-colors"
+            <p className="text-sm font-semibold text-[var(--ink)] group-hover:text-[var(--primary-dark)] leading-snug transition-colors"
               style={{ fontFamily: "var(--font-display)" }}>
               {cfg.titulo}
             </p>
@@ -467,7 +467,7 @@ function DocFormPanel({
         style={{ background: cfg.bg }}
       >
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{cfg.icon}</span>
+          <span className="w-8 h-8 rounded-[6px] flex items-center justify-center text-xs font-bold" style={{ background: cfg.bg, color: cfg.cor }}>{cfg.icon}</span>
           <div>
             <h2 className="text-sm font-semibold text-[var(--ink)]"
               style={{ fontFamily: "var(--font-display)", color: cfg.cor }}>
@@ -479,9 +479,9 @@ function DocFormPanel({
         <div className="flex items-center gap-2">
           <button
             onClick={() => setPreview((v) => !v)}
-            className="h-8 px-3 text-xs border border-[var(--border)] rounded-[6px] bg-white hover:border-[var(--gold)] transition-colors"
+            className="h-8 px-3 text-xs border border-[var(--border)] rounded-[6px] bg-white hover:border-[var(--primary)] transition-colors"
           >
-            {preview ? "Ocultar Preview" : "👁 Preview"}
+            {preview ? "Ocultar Preview" : "Preview"}
           </button>
           <button
             onClick={onFechar}
@@ -529,7 +529,7 @@ function DocFormPanel({
               size="sm"
               onClick={() => setPreview((v) => !v)}
             >
-              {preview ? "Ocultar Preview" : "👁 Preview"}
+              {preview ? "Ocultar Preview" : "Preview"}
             </Button>
             <Button
               variant="primary"
@@ -537,7 +537,7 @@ function DocFormPanel({
               loading={salvando}
               onClick={handleSalvarEGerar}
             >
-              📄 Gerar PDF
+              Gerar PDF
             </Button>
           </div>
         </div>
@@ -551,13 +551,13 @@ function DocFormPanel({
               </p>
               <button
                 onClick={handleGerarPDF}
-                className="text-xs text-[var(--gold-dark)] hover:underline"
+                className="text-xs text-[var(--primary-dark)] hover:underline"
               >
                 Abrir em nova aba →
               </button>
             </div>
             <div
-              className="flex-1 rounded-[var(--radius)] overflow-hidden border-2 border-[var(--gold-light)] shadow-md bg-white"
+              className="flex-1 rounded-[var(--radius)] overflow-hidden border-2 border-[var(--primary-light)] shadow-md bg-white"
               style={{ minHeight: 520 }}
             >
               <iframe
@@ -627,7 +627,7 @@ function CampoForm({
           autoComplete="off"
           className={[
             "w-full h-10 rounded-[var(--radius)] border bg-[var(--surface)] text-sm px-3",
-            "focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)]",
+            "focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]",
             erro ? "border-[var(--red)]" : "border-[var(--border)]",
           ].join(" ")}
         />
@@ -703,7 +703,7 @@ function CampoForm({
               onChange={(e) => onChange(e.target.value)}
               className={[
                 "flex-1 h-10 rounded-[var(--radius)] border bg-[var(--surface)] text-sm px-3 appearance-none",
-                "focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] transition-colors",
+                "focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors",
                 erro ? "border-[var(--red)]" : "border-[var(--border)]",
               ].join(" ")}
             >
@@ -715,7 +715,7 @@ function CampoForm({
               type="button"
               onClick={() => onChange("")}
               title="Digitar nome diferente"
-              className="h-10 px-3 text-xs border border-[var(--border)] rounded-[var(--radius)] bg-[var(--surface)] hover:border-[var(--gold)] hover:text-[var(--gold-dark)] transition-colors whitespace-nowrap"
+              className="h-10 px-3 text-xs border border-[var(--border)] rounded-[var(--radius)] bg-[var(--surface)] hover:border-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors whitespace-nowrap"
             >
               + Outro
             </button>
@@ -729,7 +729,7 @@ function CampoForm({
               autoFocus
               className={[
                 "flex-1 h-10 rounded-[var(--radius)] border bg-[var(--surface)] text-sm px-3",
-                "focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] transition-colors",
+                "focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors",
                 erro ? "border-[var(--red)]" : "border-[var(--border)]",
               ].join(" ")}
             />
@@ -737,7 +737,7 @@ function CampoForm({
               type="button"
               onClick={() => onChange((campo.options ?? [])[0] ?? "")}
               title="Voltar para lista"
-              className="h-10 px-3 text-xs border border-[var(--border)] rounded-[var(--radius)] bg-[var(--surface)] hover:border-[var(--gold)] hover:text-[var(--gold-dark)] transition-colors whitespace-nowrap"
+              className="h-10 px-3 text-xs border border-[var(--border)] rounded-[var(--radius)] bg-[var(--surface)] hover:border-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors whitespace-nowrap"
             >
               ← Lista
             </button>
@@ -774,7 +774,7 @@ function CampoForm({
           className={[
             "w-full rounded-[var(--radius)] border bg-[var(--surface)] text-sm text-[var(--ink)]",
             "placeholder:text-[var(--ink-muted)] px-3 py-2 resize-y",
-            "focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)] transition-colors",
+            "focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors",
             erro ? "border-[var(--red)]" : "border-[var(--border)]",
           ].join(" ")}
         />
@@ -834,12 +834,12 @@ function HistoricoView({
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
           placeholder="Buscar por nome ou assunto…"
-          className="h-9 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm px-3 w-64 focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)]"
+          className="h-9 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm px-3 w-64 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]"
         />
         <select
           value={tipo}
           onChange={(e) => setTipo(e.target.value as DocTipo | "")}
-          className="h-9 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm px-3 appearance-none focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-[var(--gold)]"
+          className="h-9 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm px-3 appearance-none focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]"
         >
           <option value="">Todos os tipos</option>
           {DOCS_CONFIG.map((c) => (
@@ -864,7 +864,7 @@ function HistoricoView({
         <HistoricoSkeleton />
       ) : historico.length === 0 ? (
         <div className="card flex flex-col items-center justify-center py-20 gap-3 text-center">
-          <span className="text-4xl">📂</span>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--ink-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
           <p className="text-base font-semibold text-[var(--ink)]">Nenhum documento emitido</p>
           <p className="text-sm text-[var(--ink-muted)]">
             {busca || tipo ? "Tente outros filtros" : "Gere seu primeiro documento na aba 'Gerar Novo'"}
@@ -893,7 +893,7 @@ function HistoricoView({
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <span
-                          className="w-7 h-7 rounded-[6px] flex items-center justify-center text-sm shrink-0"
+                          className="w-7 h-7 rounded-[6px] flex items-center justify-center text-xs font-bold shrink-0"
                           style={{ background: cfg?.bg, color: cfg?.cor }}
                         >
                           {cfg?.icon}
@@ -911,9 +911,9 @@ function HistoricoView({
                         <button
                           onClick={() => handleRegerarPDF(d)}
                           title="Baixar / Imprimir PDF"
-                          className="h-7 px-2 text-xs rounded-[6px] bg-[var(--surface-2)] border border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--gold-dark)] transition-colors"
+                          className="h-7 px-2 text-xs rounded-[6px] bg-[var(--surface-2)] border border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors"
                         >
-                          📄
+                          PDF
                         </button>
 
                         {confirmId === d.id ? (
@@ -937,7 +937,7 @@ function HistoricoView({
                             title="Deletar"
                             className="h-7 px-2 text-xs rounded-[6px] bg-[var(--surface-2)] border border-[var(--border)] hover:border-[var(--red)] hover:text-[var(--red)] transition-colors"
                           >
-                            🗑
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
                           </button>
                         )}
                       </div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { ButtonHTMLAttributes, forwardRef } from "react";
 
@@ -15,7 +15,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const styles: Record<Variant, string> = {
   primary:
-    "bg-[var(--gold)] text-white hover:bg-[var(--gold-dark)] shadow-sm active:scale-[.98]",
+    "bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)] shadow-sm active:scale-[.98]",
   secondary:
     "bg-[var(--surface)] text-[var(--ink)] border border-[var(--border)] hover:bg-[var(--surface-2)] active:scale-[.98]",
   ghost:

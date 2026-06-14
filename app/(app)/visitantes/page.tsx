@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -28,32 +28,25 @@ export default function VisitantesPage() {
 
   const supabase = createClient();
 
-  // Debounce busca
   useEffect(() => {
     const t = setTimeout(() => setBusca(buscaInput), 400);
     return () => clearTimeout(t);
   }, [buscaInput]);
 
-  // Reset paginação ao mudar filtros
   useEffect(() => { setPagina(0); }, [busca, filtroVisita]);
 
   const carregar = useCallback(async () => {
     setLoading(true);
     try {
-      // Monta query base — sempre filtra visitante
       let base = supabase
         .from("pessoas")
         .select("*", { count: "exact" })
         .eq("tipo", "visitante")
         .order("criado_em", { ascending: false });
 
-      if (busca.trim())
-        base = base.ilike("nome", `%${busca.trim()}%`);
-
-      if (filtroVisita === "primeira")
-        base = base.eq("primeira_vez", true);
-      else if (filtroVisita === "retorno")
-        base = base.eq("primeira_vez", false);
+      if (busca.trim()) base = base.ilike("nome", `%${busca.trim()}%`);
+      if (filtroVisita === "primeira") base = base.eq("primeira_vez", true);
+      else if (filtroVisita === "retorno") base = base.eq("primeira_vez", false);
 
       const { data, error, count } = await base.range(
         pagina * POR_PAGINA,
@@ -92,10 +85,29 @@ export default function VisitantesPage() {
     }
   }
 
+  function exportarCSV() {
+    const headers = ["Nome", "Contato", "Email", "Tipo Visita", "Registrado em"];
+    const rows = visitantes.map((v) => [
+      v.nome,
+      v.contato ?? "",
+      v.email ?? "",
+      v.primeira_vez ? "1ª visita" : "Retornou",
+      new Date(v.criado_em).toLocaleDateString("pt-BR"),
+    ]);
+    const csv = [headers, ...rows]
+      .map((r) => r.map((c) => `"${c}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `visitantes_${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   const temFiltro = !!(busca || filtroVisita);
   const totalPaginas = Math.ceil(total / POR_PAGINA);
-
-  // Estatísticas rápidas
   const primeiraVez = visitantes.filter((v) => v.primeira_vez).length;
   const retornaram  = visitantes.filter((v) => !v.primeira_vez).length;
 
@@ -110,7 +122,7 @@ export default function VisitantesPage() {
         }
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm">Exportar</Button>
+            <Button variant="ghost" size="sm" onClick={exportarCSV}>Exportar</Button>
             <Button variant="primary" size="sm" onClick={abrirNovo}>
               + Novo visitante
             </Button>
@@ -120,18 +132,15 @@ export default function VisitantesPage() {
 
       <main style={{ paddingTop: "var(--topbar-h)" }} className="flex-1 p-5 flex flex-col gap-4">
 
-        {/* Cards de estatísticas */}
         {!loading && total > 0 && (
           <div className="grid grid-cols-3 gap-3">
-            <StatCard icon="🤝" label="Total" value={total} color="var(--blue)" />
-            <StatCard icon="⭐" label="1ª visita" value={primeiraVez} color="var(--gold)" />
-            <StatCard icon="🔄" label="Retornaram" value={retornaram} color="var(--green)" />
+            <StatCard icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>} label="Total" value={total} color="var(--blue)" />
+            <StatCard icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>} label="1ª visita" value={primeiraVez} color="var(--primary)" />
+            <StatCard icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>} label="Retornaram" value={retornaram} color="var(--green)" />
           </div>
         )}
 
-        {/* Toolbar */}
         <div className="flex flex-wrap gap-3 items-center">
-          {/* Busca */}
           <div className="relative flex-1 min-w-[200px] max-w-sm">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-muted)] pointer-events-none">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -144,33 +153,30 @@ export default function VisitantesPage() {
               placeholder="Buscar visitante..."
               value={buscaInput}
               onChange={(e) => setBuscaInput(e.target.value)}
-              className="w-full h-9 pl-9 pr-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)]"
+              className="w-full h-9 pl-9 pr-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
             />
           </div>
 
-          {/* Filtro visita */}
           <select
             value={filtroVisita}
             onChange={(e) => setFiltroVisita(e.target.value as FiltroVisita)}
-            className="h-9 px-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)]"
+            className="h-9 px-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
           >
             <option value="">Todas as visitas</option>
             <option value="primeira">1ª visita</option>
             <option value="retorno">Retornou</option>
           </select>
 
-          {/* Limpar */}
           {temFiltro && (
             <button
               onClick={() => { setBuscaInput(""); setFiltroVisita(""); }}
               className="h-9 px-3 text-sm text-[var(--ink-muted)] hover:text-[var(--red)] hover:bg-[#fde8e6] rounded-[var(--radius)] transition-colors"
             >
-              ✕ Limpar
+              × Limpar
             </button>
           )}
         </div>
 
-        {/* Tabela */}
         <TabelaVisitantes
           pessoas={visitantes}
           loading={loading}
@@ -178,24 +184,17 @@ export default function VisitantesPage() {
           onDelete={handleDelete}
         />
 
-        {/* Paginação */}
         {totalPaginas > 1 && (
           <div className="flex items-center justify-between text-sm text-[var(--ink-muted)]">
             <span>
               {pagina * POR_PAGINA + 1}–{Math.min((pagina + 1) * POR_PAGINA, total)} de {total}
             </span>
             <div className="flex gap-1">
-              <PagBtn disabled={pagina === 0} onClick={() => setPagina((p) => p - 1)}>
-                ← Anterior
-              </PagBtn>
+              <PagBtn disabled={pagina === 0} onClick={() => setPagina((p) => p - 1)}>← Anterior</PagBtn>
               {Array.from({ length: Math.min(totalPaginas, 5) }).map((_, i) => (
-                <PagBtn key={i} active={i === pagina} onClick={() => setPagina(i)}>
-                  {i + 1}
-                </PagBtn>
+                <PagBtn key={i} active={i === pagina} onClick={() => setPagina(i)}>{i + 1}</PagBtn>
               ))}
-              <PagBtn disabled={pagina >= totalPaginas - 1} onClick={() => setPagina((p) => p + 1)}>
-                Próxima →
-              </PagBtn>
+              <PagBtn disabled={pagina >= totalPaginas - 1} onClick={() => setPagina((p) => p + 1)}>Próxima →</PagBtn>
             </div>
           </div>
         )}
@@ -211,17 +210,10 @@ export default function VisitantesPage() {
   );
 }
 
-/* ── Sub-components ───────────────────────────────────────────────────────── */
-
-function StatCard({
-  icon, label, value, color,
-}: { icon: string; label: string; value: number; color: string }) {
+function StatCard({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: number; color: string }) {
   return (
     <div className="card px-4 py-3 flex items-center gap-3">
-      <span
-        style={{ background: color + "18", color }}
-        className="w-9 h-9 rounded-[var(--radius)] flex items-center justify-center text-lg shrink-0"
-      >
+      <span style={{ background: color + "18", color }} className="w-9 h-9 rounded-[var(--radius)] flex items-center justify-center shrink-0">
         {icon}
       </span>
       <div>
@@ -232,18 +224,14 @@ function StatCard({
   );
 }
 
-function PagBtn({
-  children, onClick, disabled, active,
-}: {
-  children: React.ReactNode; onClick: () => void; disabled?: boolean; active?: boolean;
-}) {
+function PagBtn({ children, onClick, disabled, active }: { children: React.ReactNode; onClick: () => void; disabled?: boolean; active?: boolean }) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
       className={[
         "h-8 px-3 rounded-[var(--radius)] text-sm font-medium transition-colors",
-        active ? "bg-[var(--gold)] text-white" : "hover:bg-[var(--surface-2)] text-[var(--ink-muted)]",
+        active ? "bg-[var(--primary)] text-white" : "hover:bg-[var(--surface-2)] text-[var(--ink-muted)]",
         disabled ? "opacity-40 cursor-not-allowed pointer-events-none" : "",
       ].join(" ")}
     >

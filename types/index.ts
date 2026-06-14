@@ -50,13 +50,14 @@ export interface Tarefa {
 }
 
 export interface Responsavel {
-  id:        string
-  nome:      string
-  email?:    string
-  whatsapp?: string
-  cor_hex:   string
-  sigla?:    string
-  ativo:     boolean
+  id:          string
+  nome:        string
+  email?:      string
+  whatsapp?:   string
+  cor_hex:     string
+  sigla?:      string
+  ativo:       boolean
+  avatar_url?: string
 }
 
 // ─── Insert / Update partials ─────────────────────────────────────────────────

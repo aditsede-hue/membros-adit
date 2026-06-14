@@ -7,7 +7,7 @@ export async function getResponsaveis(
 ): Promise<Responsavel[]> {
   let query = supabase
     .from('responsaveis')
-    .select('*')
+    .select('id, nome, email, whatsapp, cor_hex, ativo, avatar_url')
     .order('nome', { ascending: true })
 
   if (apenasAtivos) query = query.eq('ativo', true)

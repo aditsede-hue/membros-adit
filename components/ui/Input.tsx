@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { InputHTMLAttributes, forwardRef } from "react";
 
@@ -36,7 +36,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               "w-full h-10 rounded-[var(--radius)] border bg-[var(--surface)] text-[var(--ink)]",
               "text-sm placeholder:text-[var(--ink-muted)]",
               "transition-colors duration-150",
-              "focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:ring-offset-0 focus:border-[var(--gold)]",
+              "focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-0 focus:border-[var(--primary)]",
               error
                 ? "border-[var(--red)] focus:ring-[var(--red)]"
                 : "border-[var(--border)]",
